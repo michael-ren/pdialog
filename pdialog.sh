@@ -10,7 +10,12 @@ WIDTH="${PDIALOG_WIDTH:-40}"
 
 TIMEOUT="${PDIALOG_TIMEOUT:-30}"
 
-PAGER="${PAGER:-less}"
+if [ "$#" -eq 0 ]; then
+	COMMAND=less
+else
+	COMMAND="${1:-less}"
+	shift
+fi
 
 
 if which gpg2 >/dev/null 2>&1; then
@@ -29,7 +34,7 @@ while true; do
 	[ "$?" -eq 0 ] || break
 
 	if [ -f "$SELECTION" ]; then
-		"$GPG" -q -d "$SELECTION" | timeout --foreground "$TIMEOUT" "$PAGER"
+		"$GPG" -q -d "$SELECTION" | timeout --foreground "$TIMEOUT" "$COMMAND" "$@"
 		DIR="$(dirname "$SELECTION")"
 	else
 		dialog --msgbox "'$SELECTION' is not a file" "$HEIGHT" "$WIDTH"
