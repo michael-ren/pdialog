@@ -10,6 +10,8 @@ WIDTH="${PDIALOG_WIDTH:-40}"
 
 TIMEOUT="${PDIALOG_TIMEOUT:-30}"
 
+GPG="${PDIALOG_GPG:-}"
+
 if [ "$#" -eq 0 ]; then
 	COMMAND=less
 else
@@ -18,12 +20,16 @@ else
 fi
 
 
-if which gpg2 >/dev/null 2>&1; then
-	GPG=gpg2
-elif which gpg >/dev/null 2>&1; then
-	GPG=gpg
-else
-	>&2 printf 'No gpg command found\n' && exit 2
+if [ -z "$GPG" ]; then
+	if which gpg2 >/dev/null 2>&1; then
+		GPG=gpg2
+	elif which gpg >/dev/null 2>&1; then
+		GPG=gpg
+	else
+		>&2 printf 'No gpg command found\n' && exit 2
+	fi
+elif [ ! which "$GPG" >/dev/null 2>&1 ]; then
+	>&2 printf 'Invalid gpg command: %s\n' "$GPG" && exit 2
 fi
 
 
