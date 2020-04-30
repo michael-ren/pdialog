@@ -33,6 +33,9 @@ elif [ ! which "$GPG" >/dev/null 2>&1 ]; then
 fi
 
 
+export GPG_TTY="$(tty)"
+
+
 while true; do
 	DIR="$(realpath "$DIR")"
 	SELECTION="$(timeout --foreground "$TIMEOUT" dialog --fselect "$DIR"/ "$HEIGHT" "$WIDTH" --output-fd 1)"
